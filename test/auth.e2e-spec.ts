@@ -62,7 +62,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
         .expect(200);
       const loginCookie = (login.headers['set-cookie'] as string[])[0];
       expect(loginCookie).toContain('HttpOnly');
-      expect(loginCookie).toContain('SameSite=Strict');
+      expect(loginCookie).not.toContain('SameSite=');
       await request(app.getHttpServer()).get('/auth/me').expect(401);
 
       const profile = await request(app.getHttpServer())

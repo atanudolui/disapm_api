@@ -30,10 +30,10 @@ version that depends on them. The API listens on `http://localhost:3001`. Set
 `FRONTEND_ORIGIN` if the frontend runs at a different origin. The frontend
 defaults to this API URL; override it by setting `NEXT_PUBLIC_API_URL` before
 starting Next.js.
-The API allows credentialed CORS requests from the production frontend domains
-`https://disapm-prod.up.railway.app` and `https://disapm.in`. Set
-`FRONTEND_ORIGIN` to add any other allowed origins; multiple origins can be
-comma-separated.
+The API allows credentialed CORS requests from the frontend domains
+`https://disapm-prod.up.railway.app`, `https://disapm-stage.up.railway.app`,
+and `https://disapm.in`. Set `FRONTEND_ORIGIN` to add any other allowed
+origins; multiple origins can be comma-separated.
 
 Public registration is disabled. After the API has started and run its
 migrations, create the first administrator from a second interactive terminal.
@@ -98,8 +98,8 @@ administration remains administrator-only.
 
 Passwords must contain at least 8 characters and fit within bcrypt's 72-byte
 limit. Authentication endpoints are rate-limited. JWT access cookies are
-HttpOnly, SameSite=Strict, and expire after 15 minutes. Production cookies use
-the Secure attribute.
+HttpOnly and expire after 15 minutes. Production cookies use the Secure
+attribute.
 
 The login page supports sign-in only. The dashboard loads the current user from
 the protected profile endpoint, redirects to sign-in when the session is

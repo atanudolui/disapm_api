@@ -9,6 +9,7 @@ async function bootstrap() {
   const allowedOrigins = new Set([
     'http://localhost:3000',
     'https://disapm-prod.up.railway.app',
+    'https://disapm-stage.up.railway.app',
     'https://disapm.in',
     ...(process.env.FRONTEND_ORIGIN ?? '')
       .split(',')
