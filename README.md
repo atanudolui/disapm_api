@@ -24,10 +24,12 @@ Start the API:
 npm run start:dev
 ```
 
-TypeORM runs pending SQL migrations on startup. Schema synchronization is
-disabled. The API listens on `http://localhost:3001`. Set `FRONTEND_ORIGIN` if
-the frontend runs at a different origin. The frontend defaults to this API URL;
-override it by setting `NEXT_PUBLIC_API_URL` before starting Next.js.
+Schema synchronization and automatic migration execution on startup are
+disabled. Apply pending SQL migrations separately before deploying an API
+version that depends on them. The API listens on `http://localhost:3001`. Set
+`FRONTEND_ORIGIN` if the frontend runs at a different origin. The frontend
+defaults to this API URL; override it by setting `NEXT_PUBLIC_API_URL` before
+starting Next.js.
 
 Public registration is disabled. After the API has started and run its
 migrations, create the first administrator from a second interactive terminal.

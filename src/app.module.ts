@@ -74,7 +74,7 @@ function validateEnvironment(config: Record<string, unknown>) {
         url: config.getOrThrow<string>('DATABASE_URL'),
         autoLoadEntities: true,
         synchronize: false,
-        migrationsRun: true,
+        migrationsRun: false,
         migrations: [
           CreateUsers20261106150000,
           AddUserRole20261106160000,
