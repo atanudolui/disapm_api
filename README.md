@@ -30,6 +30,10 @@ version that depends on them. The API listens on `http://localhost:3001`. Set
 `FRONTEND_ORIGIN` if the frontend runs at a different origin. The frontend
 defaults to this API URL; override it by setting `NEXT_PUBLIC_API_URL` before
 starting Next.js.
+The API allows credentialed CORS requests from the production frontend domains
+`https://disapm-prod.up.railway.app` and `https://disapm.in`. Set
+`FRONTEND_ORIGIN` to add any other allowed origins; multiple origins can be
+comma-separated.
 
 Public registration is disabled. After the API has started and run its
 migrations, create the first administrator from a second interactive terminal.
