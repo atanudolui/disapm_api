@@ -10,8 +10,6 @@
     "build": "nest build",
     "deploy": "nest deploy",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "user:create": "node scripts/create-user.mjs",
-    "seed:sample-ghats": "node --env-file-if-exists=.env scripts/seed-sample-ghats.mjs",
     "start:dev1": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
