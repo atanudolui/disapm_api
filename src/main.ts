@@ -11,6 +11,7 @@ async function bootstrap() {
     'https://disapm-prod.up.railway.app',
     'https://disapm-stage.up.railway.app',
     'https://disapm.in',
+    'https://www.disapm.in',
     ...(process.env.FRONTEND_ORIGIN ?? '')
       .split(',')
       .map((origin) => origin.trim())
