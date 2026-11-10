@@ -117,6 +117,31 @@ export class AuthService {
     return user;
   }
 
+  async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+  ) {
+    const user = await this.users.findOneBy({ id: userId });
+    if (!user) {
+      throw new UnauthorizedException('User no longer exists.');
+    }
+
+    if (!(await compare(currentPassword, user.passwordHash))) {
+      throw new UnauthorizedException('Current password is incorrect.');
+    }
+
+    if (currentPassword === newPassword) {
+      throw new BadRequestException(
+        'New password must be different from the current password.',
+      );
+    }
+
+    user.passwordHash = await this.hashPassword(newPassword);
+    await this.users.save(user);
+    return { success: true };
+  }
+
   listUsers() {
     return this.users.find({
       select: {

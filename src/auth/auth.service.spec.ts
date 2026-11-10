@@ -135,6 +135,40 @@ describe('AuthService', () => {
     });
   });
 
+  it('changes the signed-in user password after verifying the current password', async () => {
+    const user = {
+      id: 'user-id',
+      username: 'fieldadmin',
+      passwordHash: await hash('password123', 4),
+    };
+    users.findOneBy.mockResolvedValue(user);
+    users.save.mockResolvedValue(user);
+
+    await expect(
+      service.changePassword('user-id', 'password123', 'new-password-123'),
+    ).resolves.toEqual({ success: true });
+
+    expect(users.save).toHaveBeenCalledWith(user);
+    await expect(compare('password123', user.passwordHash)).resolves.toBe(
+      false,
+    );
+    await expect(compare('new-password-123', user.passwordHash)).resolves.toBe(
+      true,
+    );
+  });
+
+  it('rejects a password change when the current password is incorrect', async () => {
+    users.findOneBy.mockResolvedValue({
+      id: 'user-id',
+      passwordHash: await hash('password123', 4),
+    });
+
+    await expect(
+      service.changePassword('user-id', 'wrong-password', 'new-password-123'),
+    ).rejects.toBeInstanceOf(UnauthorizedException);
+    expect(users.save).not.toHaveBeenCalled();
+  });
+
   it('lists users without password hashes', async () => {
     const listedUsers = [{
       id: 'user-id',

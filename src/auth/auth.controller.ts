@@ -15,6 +15,7 @@ import type { Request, Response } from 'express';
 import { AuthService } from './auth.service.js';
 import { JwtAuthGuard } from './jwt-auth.guard.js';
 import { LoginDto } from './dto/login.dto.js';
+import { ChangePasswordDto } from './dto/change-password.dto.js';
 
 interface AuthenticatedRequest extends Request {
   user: { userId: string; username: string };
@@ -53,6 +54,21 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   getProfile(@Req() request: AuthenticatedRequest) {
     return this.auth.getProfile(request.user.userId);
+  }
+
+  @Post('change-password')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
+  changePassword(
+    @Req() request: AuthenticatedRequest,
+    @Body() dto: ChangePasswordDto,
+  ) {
+    return this.auth.changePassword(
+      request.user.userId,
+      dto.currentPassword,
+      dto.newPassword,
+    );
   }
 
   private setAccessCookie(response: Response, token: string) {

@@ -236,6 +236,37 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
         .expect(400);
     });
 
+    it('lets an authenticated user change their own password', async () => {
+      const login = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send({ username, password })
+        .expect(200);
+      const cookie = login.headers['set-cookie'];
+
+      await request(app.getHttpServer())
+        .post('/auth/change-password')
+        .set('Cookie', cookie)
+        .send({
+          currentPassword: 'wrong-password',
+          newPassword: 'new-secure-password-123',
+        })
+        .expect(401);
+
+      await request(app.getHttpServer())
+        .post('/auth/change-password')
+        .set('Cookie', cookie)
+        .send({
+          currentPassword: password,
+          newPassword: 'new-secure-password-123',
+        })
+        .expect(200, { success: true });
+
+      await request(app.getHttpServer())
+        .post('/auth/login')
+        .send({ username, password: 'new-secure-password-123' })
+        .expect(200);
+    });
+
     afterAll(async () => {
       await app?.close();
     });
