@@ -63,9 +63,15 @@ export class AuthController {
   }
 
   private cookieOptions() {
+    // The UI and API are on different origins, so the browser only sends the
+    // cookie on cross-site fetches when it is SameSite=None (which needs Secure).
+    const secure =
+      this.config.get('NODE_ENV') === 'production' ||
+      !!this.config.get('RAILWAY_ENVIRONMENT_ID');
     return {
       httpOnly: true,
-      secure: this.config.get('NODE_ENV') === 'production',
+      secure,
+      sameSite: secure ? ('none' as const) : ('lax' as const),
       path: '/',
     };
   }
