@@ -388,7 +388,7 @@ export class GhatsService {
 
     return {
       generatedAt: new Date().toISOString(),
-      totalGhats: ghats.length,
+      totalGhats: visibleGhats.length,
       inspectedGhats: ghatEntries.filter((entry) => entry.latestInspection)
         .length,
       pendingDeficiencies: pendingCount,
