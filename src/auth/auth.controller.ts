@@ -16,13 +16,13 @@ import { AuthService } from './auth.service.js';
 import { JwtAuthGuard } from './jwt-auth.guard.js';
 import { LoginDto } from './dto/login.dto.js';
 import { ChangePasswordDto } from './dto/change-password.dto.js';
+import { ACCESS_TOKEN_TTL_MS } from './auth.constants.js';
 
 interface AuthenticatedRequest extends Request {
   user: { userId: string; username: string };
 }
 
 const ACCESS_COOKIE = 'access_token';
-const ACCESS_TOKEN_TTL_MS = 15 * 60 * 1000;
 
 @Controller('auth')
 export class AuthController {

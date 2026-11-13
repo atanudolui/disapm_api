@@ -5,6 +5,7 @@ import { plainToInstance } from 'class-transformer';
 import { GhatInspection, INSPECTION_AREAS } from './ghat-inspection.entity.js';
 import { GhatInspectionPhoto } from './ghat-inspection-photo.entity.js';
 import { Ghat } from './ghat.entity.js';
+import { User } from '../auth/user.entity.js';
 import { CreateInspectionDto } from './dto/inspection.dto.js';
 import { GhatsService } from './ghats.service.js';
 
@@ -38,11 +39,13 @@ describe('GhatsService', () => {
     findBy: vi.fn(),
     createQueryBuilder: vi.fn(),
   };
+  const users = { find: vi.fn() };
   const adminScope = { userId: 'admin-id', role: 'admin' as const };
   let service: GhatsService;
 
   beforeEach(async () => {
     vi.clearAllMocks();
+    users.find.mockResolvedValue([]);
     const moduleRef = await Test.createTestingModule({
       providers: [
         GhatsService,
@@ -52,6 +55,7 @@ describe('GhatsService', () => {
           useValue: inspections,
         },
         { provide: getRepositoryToken(GhatInspectionPhoto), useValue: photos },
+        { provide: getRepositoryToken(User), useValue: users },
       ],
     }).compile();
     service = moduleRef.get(GhatsService);

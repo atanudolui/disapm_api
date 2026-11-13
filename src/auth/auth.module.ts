@@ -9,6 +9,7 @@ import { JwtStrategy } from './jwt.strategy.js';
 import { User } from './user.entity.js';
 import { UsersController } from './users.controller.js';
 import { AdminGuard } from './admin.guard.js';
+import { ACCESS_TOKEN_TTL_SECONDS } from './auth.constants.js';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { AdminGuard } from './admin.guard.js';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.getOrThrow<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '15m' },
+        signOptions: { expiresIn: ACCESS_TOKEN_TTL_SECONDS },
       }),
     }),
   ],

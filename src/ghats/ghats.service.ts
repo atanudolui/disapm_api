@@ -17,6 +17,7 @@ import {
   type UploadedInspectionPhoto,
 } from './ghat-inspection-photo.entity.js';
 import { Ghat } from './ghat.entity.js';
+import { User } from '../auth/user.entity.js';
 import type { CreateGhatDto, UpdateGhatDto } from './dto/ghat.dto.js';
 import type {
   CreateInspectionDto,
@@ -37,6 +38,8 @@ export class GhatsService {
     private readonly inspections: Repository<GhatInspection>,
     @InjectRepository(GhatInspectionPhoto)
     private readonly photos: Repository<GhatInspectionPhoto>,
+    @InjectRepository(User)
+    private readonly users: Repository<User>,
   ) {}
 
   async listGhats(scope: UserScope) {
@@ -311,6 +314,26 @@ export class GhatsService {
               inspection.createdBy === scope.userId,
           );
 
+    const recorderIds = [
+      ...new Set(
+        visibleInspections
+          .map((inspection) => inspection.createdBy)
+          .filter((userId): userId is string => Boolean(userId)),
+      ),
+    ];
+    const recorders = recorderIds.length
+      ? await this.users.find({
+          where: { id: In(recorderIds) },
+          select: { id: true, name: true },
+        })
+      : [];
+    const recorderNames = new Map(
+      recorders.map((recorder) => [recorder.id, recorder.name]),
+    );
+    const getRecorderName = (inspection: GhatInspection) =>
+      (inspection.createdBy && recorderNames.get(inspection.createdBy)) ||
+      inspection.inspectedBy;
+
     const latestByGhat = new Map<string, GhatInspection>();
     for (const inspection of visibleInspections) {
       if (!latestByGhat.has(inspection.ghatId)) {
@@ -348,7 +371,7 @@ export class GhatsService {
             occasion: inspection.occasion,
             latitude: inspection.latitude,
             longitude: inspection.longitude,
-            inspectedBy: inspection.inspectedBy,
+            inspectedBy: getRecorderName(inspection),
             createdAt: inspection.createdAt,
             updatedAt: inspection.updatedAt,
             checklist: inspection.checklist,
@@ -367,7 +390,7 @@ export class GhatsService {
               occasion: latestInspection.occasion,
               latitude: latestInspection.latitude,
               longitude: latestInspection.longitude,
-              inspectedBy: latestInspection.inspectedBy,
+              inspectedBy: getRecorderName(latestInspection),
               checklist: latestInspection.checklist,
               photos: (latestInspection.photos ?? []).map(
                 ({ id, fileName }) => ({ id, fileName }),

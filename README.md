@@ -1,6 +1,6 @@
 # Authentication API
 
-NestJS API for the Puja Readiness Portal frontend. It uses PostgreSQL through
+NestJS API for the Purba Medinipur Puja Readiness Portal frontend. It uses PostgreSQL through
 TypeORM, hashes passwords with bcrypt, issues short-lived JWTs, and stores each
 token in an HttpOnly cookie.
 
