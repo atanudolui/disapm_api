@@ -362,6 +362,7 @@ export class GhatsService {
           block: ghat.block,
           nodalOfficerName: ghat.nodalOfficerName,
           nodalOfficerContact: ghat.nodalOfficerContact,
+          updatedAt: ghat.updatedAt,
         },
         inspections: (inspectionsByGhat.get(ghat.id) ?? []).map(
           (inspection) => ({
